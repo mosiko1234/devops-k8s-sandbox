@@ -1,0 +1,33 @@
+name: Create Developer Environment
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Configure AWS Credentials using OIDC
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::YOUR_ACCOUNT_ID:role/YOUR_ROLE_NAME
+          aws-region: us-east-1
+      
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.4.0
+      
+      - name: Initialize Terraform
+        run: terraform init -backend-config="env/${{ github.actor }}/${{ github.actor }}-backend.tfvars"
+
+      - name: Plan and Apply
+        run: terraform apply -var-file="env/${{ github.actor }}/${{ github.actor }}.tfvars" -auto-approve
