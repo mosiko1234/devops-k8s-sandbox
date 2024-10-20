@@ -11,7 +11,6 @@ crash.log
 .terraform.lock.hcl
 
 # Ignore variable files with sensitive information
-*.tfvars
 *.tfvars.json
 
 # Ignore override files (typically used for local development)
