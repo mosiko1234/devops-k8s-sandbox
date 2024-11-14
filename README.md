@@ -63,7 +63,7 @@ Replace <your-s3-bucket-name> and <your-dynamodb-table-name> with the actual nam
 Run the following command to initialize Terraform with your environment's specific configuration:
 
 ```bash
-./scripts/init.sh my-env
+./scripts/deploy.sh my-env init
 ```
 
 ### Step 5: Run Terraform Commands
@@ -71,12 +71,12 @@ Now you can run Terraform commands for your environment.
 
 Plan: Preview the changes Terraform will make:
 ```bash
-./scripts/plan.sh my-env
+./scripts/deploy.sh my-env plan
 ```
 
 Apply: Apply the changes and deploy the infrastructure:
 ```bash
-./scripts/apply.sh my-env
+./scripts/deploy.sh my-env apply
 ```
 
 Destroy: Destroy the infrastructure when you're done:
@@ -100,11 +100,9 @@ devops-k8s-sandbox/
 ├── modules/                   # Terraform modules (e.g., VPC, EKS)
 │   ├── vpc/                   # Module for managing the VPC
 │   └── eks/                   # Module for managing the EKS cluster
-├── scripts/                   # Scripts to streamline Terraform commands
-│   ├── init.sh                # Script to initialize the backend
-│   ├── plan.sh                # Script to run terraform plan
-│   ├── apply.sh               # Script to run terraform apply
-│   └── destroy.sh             # Script to run terraform destroy
+├── scripts/                   # Scripts to streamline Terraform commands               # Script to initialize the backend
+    ├── deploy.sh              # Script to run terraform command
+    └── destroy.sh             # Script to run terraform destroy
 
 ```
 
