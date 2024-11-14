@@ -63,13 +63,3 @@ variable "availability_zones" {
   description = "List of availability zones to distribute subnets across"
   type        = list(string)
 }
-
-variable "dynamodb_table" {
-  description = "The DynamoDB table for state locking"
-  type        = string
-}
-
-variable "s3_bucket" {
-  description = "The name of the S3 bucket for storing the Terraform state"
-  type        = string
-}
