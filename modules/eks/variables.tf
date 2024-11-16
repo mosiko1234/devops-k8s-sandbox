@@ -11,7 +11,7 @@ variable "cluster_version" {
   description = "The version of the EKS cluster"
   type        = string
   validation {
-    condition     = can(regex("^1\.(\\d+)$", var.cluster_version))
+    condition     = can(regex("^1\\.(\\d+)$", var.cluster_version))
     error_message = "cluster_version must be in the format 1.x (e.g., 1.21, 1.22)."
   }
 }
@@ -34,8 +34,8 @@ variable "desired_capacity" {
   description = "Desired number of worker nodes"
   type        = number
   validation {
-    condition     = var.desired_capacity >= var.min_capacity && var.desired_capacity <= var.max_capacity
-    error_message = "desired_capacity must be between min_capacity and max_capacity."
+    condition     = var.desired_capacity >= 0
+    error_message = "Desired capacity must be greater than or equal to 0."
   }
 }
 
