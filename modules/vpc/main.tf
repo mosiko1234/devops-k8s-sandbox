@@ -4,30 +4,30 @@ resource "aws_vpc" "main_vpc" {
   enable_dns_hostnames = true
 
   tags = {
-    Name = "${var.env_name}-vpc"
+    Name = "${var.env}-vpc"
   }
 }
 
 resource "aws_subnet" "public_subnet" {
-  count = length(var.public_subnet_cidrs)
+  count = length(var.vpc_subnet_public)
   vpc_id = aws_vpc.main_vpc.id
-  cidr_block = element(var.public_subnet_cidrs, count.index)
-  availability_zone = element(var.availability_zones, count.index)  # שימוש באזורי זמינות שונים
+  cidr_block = element(var.vpc_subnet_public, count.index)
+  availability_zone = element(var.vpc_availability_zones, count.index)  # שימוש באזורי זמינות שונים
   map_public_ip_on_launch = true
 
   tags = {
-    Name = "${var.env_name}-public-subnet-${count.index}"
+    Name = "${var.env}-public-subnet-${count.index}"
   }
 }
 
 resource "aws_subnet" "private_subnet" {
-  count = length(var.private_subnet_cidrs)
+  count = length(var.vpc_subnet_private)
   vpc_id = aws_vpc.main_vpc.id
-  cidr_block = element(var.private_subnet_cidrs, count.index)
-  availability_zone = element(var.availability_zones, count.index)  # שימוש באזורי זמינות שונים
+  cidr_block = element(var.vpc_subnet_private, count.index)
+  availability_zone = element(var.vpc_availability_zones, count.index)  # שימוש באזורי זמינות שונים
 
   tags = {
-    Name = "${var.env_name}-private-subnet-${count.index}"
+    Name = "${var.env}-private-subnet-${count.index}"
   }
 }
 
@@ -35,7 +35,7 @@ resource "aws_internet_gateway" "main_igw" {
   vpc_id = aws_vpc.main_vpc.id
 
   tags = {
-    Name = "${var.env_name}-igw"
+    Name = "${var.env}-igw"
   }
 }
 
@@ -48,12 +48,12 @@ resource "aws_route_table" "public_route_table" {
   }
 
   tags = {
-    Name = "${var.env_name}-public-route-table"
+    Name = "${var.env}-public-route-table"
   }
 }
 
 resource "aws_route_table_association" "public_subnet_assoc" {
-  count = length(var.public_subnet_cidrs)
+  count = length(var.vpc_subnet_public)
   subnet_id = aws_subnet.public_subnet[count.index].id
   route_table_id = aws_route_table.public_route_table.id
 }
@@ -84,7 +84,7 @@ resource "aws_security_group" "main_sg" {
   }
 
   tags = {
-    Name = "${var.env_name}-sg"
+    Name = "${var.env}-sg"
   }
 }
 

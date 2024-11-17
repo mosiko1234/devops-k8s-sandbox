@@ -1,12 +1,12 @@
 resource "aws_eks_cluster" "this" {
-  name     = var.cluster_name
+  name     = var.eks_name
   role_arn = aws_iam_role.eks_cluster_role.arn
 
   vpc_config {
     subnet_ids = var.subnet_ids
   }
 
-  version = var.cluster_version
+  version = var.eks_version
 
   tags = var.tags
 }
@@ -18,19 +18,19 @@ resource "aws_eks_node_group" "this" {
   subnet_ids      = var.subnet_ids
 
   scaling_config {
-    desired_size = var.desired_capacity
-    max_size     = var.max_capacity
-    min_size     = var.min_capacity
+    desired_size = var.eks_instance_scaling_desired
+    max_size     = var.eks_instance_scaling_max
+    min_size     = var.eks_instance_scaling_min
   }
 
-  instance_types = [var.instance_type]
+  instance_types = [var.eks_instance_type]
 
   tags = var.tags
 }
 
 
 resource "aws_iam_role" "eks_cluster_role" {
-  name = "${var.cluster_name}-eks-role"
+  name = "${var.eks_name}-eks-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -52,7 +52,7 @@ resource "aws_iam_role_policy_attachment" "eks_cluster_AmazonEKSClusterPolicy" {
 }
 
 resource "aws_iam_role" "eks_node_role" {
-  name = "${var.cluster_name}-eks-node-role"
+  name = "${var.eks_name}-eks-node-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"

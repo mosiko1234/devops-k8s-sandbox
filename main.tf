@@ -2,25 +2,33 @@ provider "aws" {
   region = var.region
 }
 
+
 module "vpc" {
-  source              = "./modules/vpc"
-  vpc_cidr_block      = var.vpc_cidr_block
-  public_subnet_cidrs = var.public_subnet_cidrs
-  private_subnet_cidrs = var.private_subnet_cidrs
-  env_name            = var.env_name
-  availability_zones  = var.availability_zones
-  count               = var.enable_vpc ? 1 : 0
+
+  source                  = "./modules/vpc"
+  count                   = var.vpc_enabled ? 1 : 0
+
+  env                     = var.env
+  vpc_cidr_block          = var.vpc_cidr_block
+  vpc_subnet_public       = var.vpc_subnet_public
+  vpc_subnet_private      = var.vpc_subnet_private
+  vpc_availability_zones  = var.vpc_availability_zones
 }
 
+
 module "eks" {
-  source          = "./modules/eks"
-  cluster_name    = var.cluster_name
-  cluster_version = var.cluster_version
-  subnet_ids      = var.enable_eks && length(module.vpc) > 0 ? module.vpc[0].public_subnet_ids : []
-  instance_type   = var.instance_type
-  desired_capacity = var.desired_capacity
-  max_capacity     = var.max_capacity
-  min_capacity     = var.min_capacity
-  tags            = var.tags
-  count           = var.enable_eks ? 1 : 0
+
+  source                       = "./modules/eks"
+  count                        = var.eks_enabled ? 1 : 0
+
+  tags                         = var.tags
+  eks_name                     = var.eks_name
+  eks_version                  = var.eks_version
+  eks_instance_type            = var.eks_instance_type
+  eks_instance_scaling_max     = var.eks_instance_scaling_max
+  eks_instance_scaling_min     = var.eks_instance_scaling_min
+  eks_instance_scaling_desired = var.eks_instance_scaling_desired
+
+  subnet_ids                   = var.eks_enabled && length(module.vpc) > 0 ? module.vpc[0].public_subnet_ids : []
+
 }

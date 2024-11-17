@@ -9,7 +9,8 @@ fi
 
 ENVIRONMENT=$1
 ACTION=$2
-VARS_FILE="env/${ENVIRONMENT}/${ENVIRONMENT}.tfvars"
+VARS_FILE="env/${ENVIRONMENT}/${ENVIRONMENT}.yml"
+TERRAFORM_FILE="env/${ENVIRONMENT}/${ENVIRONMENT}.tfvars"
 
 if [ ! -f "$VARS_FILE" ]; then
   echo "Error: Variables file for environment '$ENVIRONMENT' not found at '$VARS_FILE'"
@@ -19,12 +20,17 @@ fi
 case "$ACTION" in
   init)
     echo "Initializing Terraform for environment '$ENVIRONMENT'..."
-    terraform init -backend-config="env/${ENVIRONMENT}/${ENVIRONMENT}-backend.tfvars"
+    python3 scripts/convert.py ${VARS_FILE} ${TERRAFORM_FILE}
+    if [ $? -eq 0 ]; then
+      terraform init -backend-config="env/${ENVIRONMENT}/${ENVIRONMENT}-backend.tfvars"
+    else
+      echo "Error: Failed to convert variables to Terraform file."
+    fi
     ;;
 
   plan)
-    echo "Running Terraform plan for environment '$ENVIRONMENT'..."
-    terraform plan -var-file="$VARS_FILE" -out="plan.tfplan"
+    echo "Running Terraform plan for environment '$ENVIRONMENT' with variables file: '$TERRAFORM_FILE'..."
+    terraform plan -var-file="$TERRAFORM_FILE" -out="plan.tfplan"
     ;;
 
   apply)

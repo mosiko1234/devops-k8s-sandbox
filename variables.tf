@@ -8,48 +8,48 @@ variable "vpc_cidr_block" {
   type        = string
 }
 
-variable "public_subnet_cidrs" {
+variable "vpc_subnet_public" {
   description = "List of CIDR blocks for public subnets"
   type        = list(string)
 }
 
-variable "private_subnet_cidrs" {
+variable "vpc_subnet_private" {
   description = "List of CIDR blocks for private subnets"
   type        = list(string)
 }
 
-variable "env_name" {
+variable "env" {
   description = "The environment name (e.g., dev, prod)"
   type        = string
 }
 
-variable "cluster_name" {
+variable "eks_name" {
   description = "The name of the EKS cluster"
   type        = string
 }
 
-variable "cluster_version" {
+variable "eks_version" {
   description = "The version of the EKS cluster"
   type        = string
   default     = "1.27"
 }
 
-variable "instance_type" {
+variable "eks_instance_type" {
   description = "Instance type for the EKS worker nodes"
   type        = string
 }
 
-variable "desired_capacity" {
+variable "eks_instance_scaling_desired" {
   description = "Desired number of worker nodes"
   type        = number
 }
 
-variable "max_capacity" {
+variable "eks_instance_scaling_max" {
   description = "Maximum number of worker nodes"
   type        = number
 }
 
-variable "min_capacity" {
+variable "eks_instance_scaling_min" {
   description = "Minimum number of worker nodes"
   type        = number
 }
@@ -59,18 +59,18 @@ variable "tags" {
   type        = map(string)
 }
 
-variable "availability_zones" {
+variable "vpc_availability_zones" {
   description = "List of availability zones to distribute subnets across"
   type        = list(string)
 }
 
-variable "enable_eks" {
+variable "eks_enabled" {
   description = "Enable EKS module"
   type        = bool
   default     = false
 }
 
-variable "enable_vpc" {
+variable "vpc_enabled" {
   description = "Enable VPC module"
   type        = bool
   default     = true
