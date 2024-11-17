@@ -63,3 +63,16 @@ variable "availability_zones" {
   description = "List of availability zones to distribute subnets across"
   type        = list(string)
 }
+
+variable "enable_eks" {
+  description = "Enable EKS module"
+  type        = bool
+  default     = false
+}
+
+variable "enable_vpc" {
+  description = "Enable VPC module"
+  type        = bool
+  default     = true
+}
+
