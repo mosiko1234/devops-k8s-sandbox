@@ -11,8 +11,8 @@ variable "public_subnet_cidrs" {
   description = "List of CIDR blocks for public subnets"
   type        = list(string)
   validation {
-    condition     = alltrue([for cidr in var.public_subnet_cidrs : cidrregex(cidr)])
-    error_message = "Each public_subnet_cidrs entry must be a valid CIDR block (e.g., 10.0.0.0/24)."
+    condition = alltrue([for cidr in var.public_subnet_cidrs : can(regex("^([0-9]{1,3}\\.){3}[0-9]{1,3}\\/([1-9]|1[0-9]|2[0-9]|3[0-2])$", cidr))])
+    error_message = "Each CIDR in the list must be a valid IPv4 CIDR block."
   }
 }
 
@@ -20,8 +20,8 @@ variable "private_subnet_cidrs" {
   description = "List of CIDR blocks for private subnets"
   type        = list(string)
   validation {
-    condition     = alltrue([for cidr in var.private_subnet_cidrs : cidrregex(cidr)])
-    error_message = "Each private_subnet_cidrs entry must be a valid CIDR block (e.g., 10.0.1.0/24)."
+    condition = alltrue([for cidr in var.private_subnet_cidrs : can(regex("^([0-9]{1,3}\\.){3}[0-9]{1,3}\\/([1-9]|1[0-9]|2[0-9]|3[0-2])$", cidr))])
+    error_message = "Each CIDR in the list must be a valid IPv4 CIDR block."
   }
 }
 
